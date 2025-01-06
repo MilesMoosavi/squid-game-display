@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'SquidPrizeMoney';
+  src: url('/fonts/squid-prize-money.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@layer components {
+  .display-container {
+    @apply w-[95vw] max-w-[1400px] aspect-[21/9] bg-zinc-900 relative mx-auto;
+  }
+  
+  .display-content {
+    @apply absolute inset-0 flex flex-col items-center justify-center;
+    color: #e4fded;
+    margin-top: min(-3%, -20px);
+    gap: min(2%, 15px);
+    text-shadow: 0 0 10px #B7D8C5; /* Increased opacity from 0.5 to 0.7 and blur from 8px to 10px */
+  }
+
+  .large-digits {
+    @apply font-['SquidPrizeMoney'] font-bold tracking-wider;
+    /* Base the font size on the container width */
+    font-size: min(5vw, 72px);
+  }
+
+  .medium-digits {
+    @apply font-['SquidPrizeMoney'] font-bold tracking-wider;
+    font-size: min(4vw, 56px);
+  }
+
+  .label-korean {
+    font-family: 'SquidPrizeMoney';
+    font-size: min(1.2vw, 18px);
+    margin-bottom: min(0.3%, 4px);
+  }
+
+  .label-english {
+    font-family: 'SquidPrizeMoney';
+    font-size: min(1vw, 14px);
+  }
+}
