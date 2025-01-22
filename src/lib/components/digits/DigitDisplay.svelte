@@ -1,8 +1,6 @@
 <script lang="ts">
   export let value = 0;
   export let size: "large" | "medium" = "large";
-  export let position: number = 0;
-  export let maxValue: number = 9;
 
   let isHovered = false;
   let isDragging = false;

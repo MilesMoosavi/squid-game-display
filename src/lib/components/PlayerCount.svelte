@@ -1,46 +1,42 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  /**
+   * @component
+   * @description Displays the the amount of players in a game. 
+   * Users may hover over the component, then scroll up or down to increment or decrement 
+   * the player count. 
+   * @requires Labels
+   * @requires DigitStyle
+   */
   import Labels from './Labels.svelte';
   import DigitStyle from './digits/DigitStyle.svelte';
   
-  export let count: number;
-  export let min = 1;
-  export let max = 456;
-
-  const dispatch = createEventDispatcher();
-  let isHovered = false;
-
-  function handleWheel(event: WheelEvent) {
-    if (!isHovered) return;
-    event.preventDefault();
-    const direction = event.deltaY > 0 ? 1 : -1;
-    const newCount = count - direction;
-    
-    if (newCount >= min && newCount <= max) {
-      const oldCount = count;
-      count = newCount;
-      dispatch('countChange', { oldCount, newCount });
-    }
+  interface PlayerCountProps {
+    count: number;
+    config: {
+      min: number;
+      max: number;
+    };
   }
 
+  export let count: PlayerCountProps['count'];
+  export let config: PlayerCountProps['config'];
+
   $: digits = count.toString().split('');
+
+  function handleWheel(event: WheelEvent) {
+    event.preventDefault();
+    const delta = event.deltaY > 0 ? -1 : 1;
+    const newCount = count + delta;
+    
+    if (newCount >= config.min && newCount <= config.max) {
+      count = newCount;
+    }
+  }
 </script>
 
-<div class="player-count">
+<div class="player-count" on:wheel={handleWheel}>
   <Labels korean="참가인원" english="NUMBER OF PLAYERS" />
-  <div 
-    class="number-display"
-    class:hovered={isHovered}
-    on:mouseenter={() => isHovered = true}
-    on:mouseleave={() => isHovered = false}
-    on:wheel|preventDefault={handleWheel}
-    role="spinbutton"
-    aria-label="Player count"
-    aria-valuemin={min}
-    aria-valuemax={max}
-    aria-valuenow={count}
-    tabindex="0"
-  >
+  <div class="number-display">
     <div class="digits-container">
       {#each digits as digit}
         <DigitStyle size="large" char={digit} />

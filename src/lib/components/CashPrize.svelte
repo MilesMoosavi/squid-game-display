@@ -1,52 +1,26 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  /**
+   * @component
+   * @description Displays the cash prize amount with Korean game show styling
+   * @requires Labels
+   * @requires DigitStyle
+   */
   import Labels from './Labels.svelte';
   import DigitStyle from './digits/DigitStyle.svelte';
   
-  const dispatch = createEventDispatcher();
-  export let amount = 0;
-  export let min = 0;
-  export let max = 45_600_000_000;
-  
-  let isHovered = false;
+  export let amount: number;
 
   function formatAmount(num: number): string {
-    return num.toString().padStart(11, '0').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  }
-
-  function handleWheel(event: WheelEvent) {
-    if (!isHovered) return;
-    event.preventDefault();
-    const direction = event.deltaY > 0 ? 1 : -1;
-    const oldAmount = amount;
-    const newAmount = amount - (direction * 100000000);
-    
-    if (newAmount >= min && newAmount <= max) {
-      amount = newAmount;
-      dispatch('amountChange', { oldAmount, newAmount });
-    }
-  }
+    // Add thousands separators (commas) to a zero-padded 11-digit number
+    return num.toString().padStart(11, '0').replace(/\B(?=(\d{3})+(?!\d))/g, ',');  }
 
   $: formattedAmount = formatAmount(amount);
-  // Split the formatted amount into individual characters (including commas)
   $: characters = ('₩ ' + formattedAmount).split('');
 </script>
 
 <div class="cash-prize">
   <Labels korean="총 상금" english="CASH PRIZE" />
-  <div 
-    class="number-display"
-    class:hovered={isHovered}
-    on:mouseenter={() => isHovered = true}
-    on:mouseleave={() => isHovered = false}
-    on:wheel|preventDefault={handleWheel}
-    role="spinbutton"
-    aria-label="Cash prize amount"
-    aria-valuemin={min}
-    aria-valuemax={max}
-    aria-valuenow={amount}
-    tabindex="0"
-  >
+  <div class="number-display">
     <div class="digits-container">
       {#each characters as char}
         <DigitStyle 
@@ -75,6 +49,6 @@
   .digits-container {
     display: inline-flex;
     justify-content: center;
-    letter-spacing: 0.04em;  /* Added letter spacing to match PlayerCount */
+    letter-spacing: 0.04em;
   }
 </style>
